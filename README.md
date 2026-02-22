@@ -1,0 +1,1 @@
+# kosugiyu-store-assets
