@@ -2390,16 +2390,16 @@ video {
     background-color: rgb(160 160 160 / var(--tw-bg-opacity));
 }
 
-.custom-17249yc {
+.custom-7idiho {
     margin-bottom: 1rem;
-    font-size: 3rem;
+    font-size: 2.125rem;
     font-weight: 700;
     --tw-text-opacity: 1;
     color: rgb(16 56 95 / var(--tw-text-opacity));
 }
 
 @media (max-width: 767px) {
-    .custom-17249yc {
+    .custom-7idiho {
         font-size: 1.5rem;
     }
 }
