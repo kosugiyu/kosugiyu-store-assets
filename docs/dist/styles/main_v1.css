@@ -1342,16 +1342,16 @@ video {
     aspect-ratio: 3/4;
 }
 
-.custom-16rp1g3 {
+.custom-1q4i4ia {
     margin-top: 0.75rem;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     --tw-text-opacity: 1;
     color: rgb(16 56 95 / var(--tw-text-opacity));
 }
 
 @media (max-width: 767px) {
-    .custom-16rp1g3 {
+    .custom-1q4i4ia {
         font-size: 1rem;
     }
 }
