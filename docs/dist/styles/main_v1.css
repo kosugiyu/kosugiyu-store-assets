@@ -949,36 +949,36 @@ video {
     }
 }
 
-.custom-qk4mdd {
+.custom-74kvh1 {
     position: relative;
     display: block;
     aspect-ratio: 800/500;
     overflow: hidden;
     border-radius: 3rem;
     container-type: inline-size;
-    padding-right: 14cqw;
 }
 
 @media (max-width: 767px) {
-    .custom-qk4mdd {
+    .custom-74kvh1 {
         aspect-ratio: 3/4;
         border-radius: 1.5rem;
     }
 }
 
-@media (max-width: 767px) {
-    .custom-qk4mdd {
-        padding-bottom: 7rem;
-        padding-right: 0px;
-    }
-}
-
-.custom-1431yhl {
+.custom-r41c5d {
     display: block;
     height: 100%;
     width: 100%;
     object-fit: cover;
     object-position: center;
+    padding-right: 30cqw;
+}
+
+@media (max-width: 767px) {
+    .custom-r41c5d {
+        padding-bottom: 7rem;
+        padding-right: 0px;
+    }
 }
 
 .custom-126kuff {
@@ -1059,9 +1059,9 @@ video {
     }
 }
 
-.custom-wljj2r {
+.custom-ud9c46 {
     margin-bottom: 0.5rem;
-    font-size: 5cqw;
+    font-size: 3.5cqw;
     font-weight: 700;
     line-height: 1.375;
     letter-spacing: .2em;
@@ -1077,7 +1077,7 @@ video {
 }
 
 @media (max-width: 767px) {
-    .custom-wljj2r {
+    .custom-ud9c46 {
         height: auto;
         font-size: 1.125rem;
         -webkit-writing-mode: horizontal-tb;
@@ -1099,11 +1099,11 @@ video {
     }
 }
 
-.custom-1xmulft {
+.custom-iy3pm7 {
     -webkit-flex: 1 1 0%;
     -ms-flex: 1 1 0%;
     flex: 1 1 0%;
-    font-size: 3cqw;
+    font-size: 2.5cqw;
     letter-spacing: .2em;
     --tw-text-opacity: 1;
     color: rgb(16 56 95 / var(--tw-text-opacity));
@@ -1117,7 +1117,7 @@ video {
 }
 
 @media (max-width: 767px) {
-    .custom-1xmulft {
+    .custom-iy3pm7 {
         font-size: 0.75rem;
         -webkit-writing-mode: horizontal-tb;
         -ms-writing-mode: lr;
