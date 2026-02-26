@@ -1063,12 +1063,12 @@ video {
     }
 }
 
-.custom-1eu1njs {
+.custom-fynual {
     min-width: calc(2em * 1.35);
     font-size: 3.5cqw;
     font-weight: 700;
     line-height: 1.375;
-    letter-spacing: .2em;
+    letter-spacing: .15em;
     --tw-text-opacity: 1;
     color: rgb(16 56 95 / var(--tw-text-opacity));
     -webkit-writing-mode: vertical-rl;
@@ -1081,7 +1081,7 @@ video {
 }
 
 @media (max-width: 767px) {
-    .custom-1eu1njs {
+    .custom-fynual {
         margin-bottom: 0.5rem;
         height: auto;
         min-height: calc(2em * 1.35);
