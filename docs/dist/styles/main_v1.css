@@ -1763,7 +1763,7 @@ video {
     font-size: 0.75rem;
 }
 
-.custom-ec031x {
+.custom-1jh9gdv {
     pointer-events: none;
     position: fixed;
     right: 0px;
@@ -1788,12 +1788,12 @@ video {
 }
 
 @media (max-width: 767px) {
-    .custom-ec031x {
+    .custom-1jh9gdv {
         height: 50px;
         -webkit-box-pack: justify;
         -webkit-justify-content: space-between;
         justify-content: space-between;
-        padding: 0.5rem;
+        padding: 0.75rem;
     }
 }
 
