@@ -1059,7 +1059,7 @@ video {
     }
 }
 
-.custom-ud9c46 {
+.custom-1plufe {
     margin-bottom: 0.5rem;
     font-size: 3.5cqw;
     font-weight: 700;
@@ -1077,9 +1077,9 @@ video {
 }
 
 @media (max-width: 767px) {
-    .custom-ud9c46 {
+    .custom-1plufe {
         height: auto;
-        font-size: 1.125rem;
+        font-size: 6.2cqw;
         -webkit-writing-mode: horizontal-tb;
         -ms-writing-mode: lr;
         writing-mode: horizontal-tb;
@@ -1099,7 +1099,7 @@ video {
     }
 }
 
-.custom-iy3pm7 {
+.custom-1czb24g {
     -webkit-flex: 1 1 0%;
     -ms-flex: 1 1 0%;
     flex: 1 1 0%;
@@ -1117,8 +1117,8 @@ video {
 }
 
 @media (max-width: 767px) {
-    .custom-iy3pm7 {
-        font-size: 0.75rem;
+    .custom-1czb24g {
+        font-size: 4cqw;
         -webkit-writing-mode: horizontal-tb;
         -ms-writing-mode: lr;
         writing-mode: horizontal-tb;
