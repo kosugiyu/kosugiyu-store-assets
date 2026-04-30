@@ -1063,12 +1063,12 @@ video {
     }
 }
 
-.custom-fynual {
+.custom-1eu1njs {
     min-width: calc(2em * 1.35);
     font-size: 3.5cqw;
     font-weight: 700;
     line-height: 1.375;
-    letter-spacing: .15em;
+    letter-spacing: .2em;
     --tw-text-opacity: 1;
     color: rgb(16 56 95 / var(--tw-text-opacity));
     -webkit-writing-mode: vertical-rl;
@@ -1081,7 +1081,7 @@ video {
 }
 
 @media (max-width: 767px) {
-    .custom-fynual {
+    .custom-1eu1njs {
         margin-bottom: 0.5rem;
         height: auto;
         min-height: calc(2em * 1.35);
@@ -1763,7 +1763,7 @@ video {
     font-size: 0.75rem;
 }
 
-.custom-1jh9gdv {
+.custom-ec031x {
     pointer-events: none;
     position: fixed;
     right: 0px;
@@ -1788,12 +1788,12 @@ video {
 }
 
 @media (max-width: 767px) {
-    .custom-1jh9gdv {
+    .custom-ec031x {
         height: 50px;
         -webkit-box-pack: justify;
         -webkit-justify-content: space-between;
         justify-content: space-between;
-        padding: 0.75rem;
+        padding: 0.5rem;
     }
 }
 
