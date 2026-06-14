@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>画像トリミングツール</title>
+  <style>
+    body { background: #fff; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; }
+    .preview-container {
+      position: relative;
+      background: #e9ecef;
+      overflow: hidden;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+      user-select: none;
+    }
+    .preview-container.empty::after {
+      content: '画像を選択してください';
+      color: #999;
+      font-size: 1.1rem;
+    }
+    #mainCanvas { position: absolute; top: 0; left: 0; }
+    #cropOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+    #cropInteraction {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .settings-row label.min-label {
+      min-width: 100px;
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+    .settings-row input[type="number"] {
+      width: 100px;
+    }
+    .crop-size-info {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      padding: 2px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      z-index: 20;
+      pointer-events: none;
+    }
+    #qualitySlider { flex: 1; max-width: 300px; }
+    .download-btn { min-width: 200px; }
+  </style>
+</head>
+<body>
+
+<div class="container mt-4" style="max-width: 900px;">
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-2">
+    <span class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+      <span class="fs-4 fw-bold">画像トリミングツール</span>
+    </span>
+    <div class="d-flex gap-2">
+      <label class="btn btn-outline-primary mb-0 d-flex align-items-center gap-1">
+        <span>画像を選択</span>
+        <input type="file" id="fileInput" accept="image/*" style="display:none">
+      </label>
+    </div>
+  </header>
+
+  <!-- トリミングプレビューエリア -->
+  <div class="preview-container empty" id="previewContainer">
+    <canvas id="mainCanvas"></canvas>
+    <canvas id="cropOverlay"></canvas>
+    <canvas id="cropInteraction"></canvas>
+    <div class="crop-size-info" id="cropSizeInfo" style="display:none;"></div>
+  </div>
+
+  <!-- 画像倍率 -->
+  <div class="settings-row mt-3">
+    <label class="min-label">画像倍率</label>
+    <span class="text-muted" style="min-width:36px;">x0.1</span>
+    <input type="range" id="zoomSlider" class="form-range" min="0.1" max="10" step="0.1" value="1" style="flex:1;">
+    <span class="text-muted" style="min-width:36px;">x10</span>
+  </div>
+
+  <!-- 出力ピクセルサイズ -->
+  <div class="settings-row">
+    <label class="min-label">出力ピクセルサイズ</label>
+    <input type="number" id="outputWidth" class="form-control form-control-sm" value="" min="1" style="width:100px;">
+    <span class="text-muted">x</span>
+    <input type="number" id="outputHeight" class="form-control form-control-sm" value="" min="1" style="width:100px;">
+  </div>
+
+  <!-- 出力ファイルサイズ -->
+  <div class="settings-row">
+    <label class="min-label">出力ファイルサイズ</label>
+    <strong id="fileSizeDisplay" style="min-width:80px;">0 KB</strong>
+  </div>
+  <div class="settings-row">
+    <label class="min-label"></label>
+    <span class="text-muted">小</span>
+    <input type="range" id="qualitySlider" min="0.01" max="1" step="0.01" value="0.85">
+    <span class="text-muted">大</span>
+  </div>
+
+  <!-- ダウンロード -->
+  <div class="d-flex justify-content-center my-4">
+    <button id="downloadBtn" class="btn btn-dark download-btn" disabled>ダウンロード</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // --- DOM ---
+  const fileInput = document.getElementById('fileInput');
+  const previewContainer = document.getElementById('previewContainer');
+  const mainCanvas = document.getElementById('mainCanvas');
+  const cropOverlay = document.getElementById('cropOverlay');
+  const cropInteraction = document.getElementById('cropInteraction');
+  const cropSizeInfo = document.getElementById('cropSizeInfo');
+  const zoomSlider = document.getElementById('zoomSlider');
+  const outputWidthEl = document.getElementById('outputWidth');
+  const outputHeightEl = document.getElementById('outputHeight');
+  const qualitySlider = document.getElementById('qualitySlider');
+  const fileSizeDisplay = document.getElementById('fileSizeDisplay');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  const mainCtx = mainCanvas.getContext('2d');
+  const overlayCtx = cropOverlay.getContext('2d');
+  const interactionCtx = cropInteraction.getContext('2d');
+
+  // --- State ---
+  let originalImage = null;  // Image object
+  let zoom = 1;
+  let panX = 0, panY = 0;   // pan offset (top-left of image on canvas)
+
+  // Crop in original image coordinates
+  let crop = { x: 0, y: 0, w: 0, h: 0 };
+  let cropRatio = null; // null = free, or number (w/h)
+
+  // Drag state
+  let dragMode = null; // 'move','nw','n','ne','e','se','s','sw','w','newCrop'
+  let dragStartX = 0, dragStartY = 0;
+  let dragStartCrop = null;
+  let lastPanX = 0, lastPanY = 0;
+
+  // Interaction overlay position
+  let interactionRect = null;
+
+  // --- Helpers ---
+  function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+  function getContainerSize() {
+    return { w: previewContainer.clientWidth, h: previewContainer.clientHeight };
+  }
+
+  // Convert image coords to screen coords (within container)
+  function imgToScreen(ix, iy) {
+    return { x: ix * zoom + panX, y: iy * zoom + panY };
+  }
+
+  // Convert screen coords to image coords
+  function screenToImg(sx, sy) {
+    return { x: (sx - panX) / zoom, y: (sy - panY) / zoom };
+  }
+
+  // --- Initialization ---
+  function initCanvases() {
+    const { w, h } = getContainerSize();
+    mainCanvas.width = w; mainCanvas.height = h;
+    cropOverlay.width = w; cropOverlay.height = h;
+    cropInteraction.width = w; cropInteraction.height = h;
+    interactionRect = cropInteraction.getBoundingClientRect();
+  }
+
+  // --- Load Image ---
+  fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        originalImage = img;
+        previewContainer.classList.remove('empty');
+        downloadBtn.disabled = false;
+        fitImage();
+        resetCropToFull();
+        render();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  function fitImage() {
+    const { w, h } = getContainerSize();
+    const imgW = originalImage.naturalWidth;
+    const imgH = originalImage.naturalHeight;
+    const scale = Math.min(w / imgW, h / imgH) * 0.9;
+    zoom = scale;
+    zoomSlider.value = zoom;
+    panX = (w - imgW * zoom) / 2;
+    panY = (h - imgH * zoom) / 2;
+  }
+
+  function resetCropToFull() {
+    crop = { x: 0, y: 0, w: originalImage.naturalWidth, h: originalImage.naturalHeight };
+    cropRatio = null;
+    updateOutputSizeFromCrop();
+  }
+
+  // --- Render ---
+  function render() {
+    if (!originalImage) return;
+    initCanvases();
+    const { w, h } = getContainerSize();
+
+    // Draw image
+    mainCtx.clearRect(0, 0, w, h);
+    mainCtx.drawImage(originalImage, panX, panY, originalImage.naturalWidth * zoom, originalImage.naturalHeight * zoom);
+
+    // Draw crop overlay
+    overlayCtx.clearRect(0, 0, w, h);
+    const cs = imgToScreen(crop.x, crop.y);
+    const cw = crop.w * zoom;
+    const ch = crop.h * zoom;
+
+    // Dark overlay outside crop
+    overlayCtx.fillStyle = 'rgba(0,0,0,0.5)';
+    overlayCtx.fillRect(0, 0, w, h);
+    overlayCtx.clearRect(cs.x, cs.y, cw, ch);
+
+    // Crop border
+    overlayCtx.strokeStyle = '#fff';
+    overlayCtx.lineWidth = 2;
+    overlayCtx.setLineDash([]);
+    overlayCtx.strokeRect(cs.x, cs.y, cw, ch);
+
+    // Rule of thirds
+    overlayCtx.strokeStyle = 'rgba(255,255,255,0.4)';
+    overlayCtx.lineWidth = 1;
+    for (let i = 1; i <= 2; i++) {
+      const lx = cs.x + (cw * i / 3);
+      overlayCtx.beginPath(); overlayCtx.moveTo(lx, cs.y); overlayCtx.lineTo(lx, cs.y + ch); overlayCtx.stroke();
+      const ly = cs.y + (ch * i / 3);
+      overlayCtx.beginPath(); overlayCtx.moveTo(cs.x, ly); overlayCtx.lineTo(cs.x + cw, ly); overlayCtx.stroke();
+    }
+
+    // Corner & edge handles
+    drawHandles(cs.x, cs.y, cw, ch);
+
+    // Crop size info
+    const realW = Math.round(crop.w);
+    const realH = Math.round(crop.h);
+    cropSizeInfo.textContent = realW + ' x ' + realH + ' px';
+    cropSizeInfo.style.display = 'block';
+  }
+
+  function drawHandles(x, y, w, h) {
+    interactionCtx.clearRect(0, 0, cropInteraction.width, cropInteraction.height);
+    const handleSize = 8;
+    const corners = [
+      { cx: x, cy: y, cursor: 'nw-resize', mode: 'nw' },
+      { cx: x + w, cy: y, cursor: 'ne-resize', mode: 'ne' },
+      { cx: x + w, cy: y + h, cursor: 'se-resize', mode: 'se' },
+      { cx: x, cy: y + h, cursor: 'sw-resize', mode: 'sw' },
+    ];
+    const edges = [
+      { cx: x + w/2, cy: y, cursor: 'n-resize', mode: 'n' },
+      { cx: x + w, cy: y + h/2, cursor: 'e-resize', mode: 'e' },
+      { cx: x + w/2, cy: y + h, cursor: 's-resize', mode: 's' },
+      { cx: x, cy: y + h/2, cursor: 'w-resize', mode: 'w' },
+    ];
+
+    // Store handle positions for hit testing
+    interactionRect = { x, y, w, h, corners, edges, handleSize };
+
+    // Draw corner handles
+    interactionCtx.fillStyle = '#fff';
+    interactionCtx.strokeStyle = '#333';
+    interactionCtx.lineWidth = 1;
+    corners.forEach(c => {
+      interactionCtx.fillRect(c.cx - handleSize/2, c.cy - handleSize/2, handleSize, handleSize);
+      interactionCtx.strokeRect(c.cx - handleSize/2, c.cy - handleSize/2, handleSize, handleSize);
+    });
+  }
+
+  function getCursorMode(sx, sy) {
+    if (!interactionRect) return null;
+    const hs = interactionRect.handleSize + 4; // hit area padding
+    // Check corners first
+    for (const c of interactionRect.corners) {
+      if (Math.abs(sx - c.cx) <= hs && Math.abs(sy - c.cy) <= hs) return c.mode;
+    }
+    // Check edges
+    for (const e of interactionRect.edges) {
+      if (e.mode === 'n' || e.mode === 's') {
+        if (Math.abs(sy - e.cy) <= hs && sx >= interactionRect.x && sx <= interactionRect.x + interactionRect.w) return e.mode;
+      } else {
+        if (Math.abs(sx - e.cx) <= hs && sy >= interactionRect.y && sy <= interactionRect.y + interactionRect.h) return e.mode;
+      }
+    }
+    // Inside crop
+    if (sx >= interactionRect.x && sx <= interactionRect.x + interactionRect.w &&
+        sy >= interactionRect.y && sy <= interactionRect.y + interactionRect.h) return 'move';
+    return null;
+  }
+
+  function getCursorForMode(mode) {
+    const map = { nw:'nw-resize', n:'n-resize', ne:'ne-resize', e:'e-resize', se:'se-resize', s:'s-resize', sw:'sw-resize', w:'w-resize', move:'move', null:'crosshair' };
+    return map[mode] || 'crosshair';
+  }
+
+  // --- Mouse / Touch Interaction ---
+  function getPointerPos(e) {
+    if (e.touches) {
+      const r = cropInteraction.getBoundingClientRect();
+      return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
+    }
+    const r = cropInteraction.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  cropInteraction.addEventListener('mousedown', onPointerDown);
+  cropInteraction.addEventListener('touchstart', onPointerDown, { passive: false });
+
+  function onPointerDown(e) {
+    e.preventDefault();
+    const p = getPointerPos(e);
+    const mode = getCursorMode(p.x, p.y);
+    dragMode = mode || 'newCrop';
+    dragStartX = p.x;
+    dragStartY = p.y;
+    dragStartCrop = { ...crop };
+    lastPanX = panX; lastPanY = panY;
+
+    document.addEventListener('mousemove', onPointerMove);
+    document.addEventListener('mouseup', onPointerUp);
+    document.addEventListener('touchmove', onPointerMove, { passive: false });
+    document.addEventListener('touchend', onPointerUp);
+  }
+
+  function onPointerMove(e) {
+    e.preventDefault();
+    const p = getPointerPos(e);
+    const dx = p.x - dragStartX;
+    const dy = p.y - dragStartY;
+    const imgDX = dx / zoom;
+    const imgDY = dy / zoom;
+
+    const imgW = originalImage.naturalWidth;
+    const imgH = originalImage.naturalHeight;
+    const sc = dragStartCrop;
+
+    if (dragMode === 'move') {
+      let nx = sc.x + imgDX;
+      let ny = sc.y + imgDY;
+      // Clamp to image bounds
+      nx = clamp(nx, 0, imgW - sc.w);
+      ny = clamp(ny, 0, imgH - sc.h);
+      crop.x = nx; crop.y = ny;
+      crop.w = sc.w; crop.h = sc.h;
+    } else if (dragMode === 'newCrop') {
+      const startImg = screenToImg(dragStartX, dragStartY);
+      const endImg = screenToImg(p.x, p.y);
+      let nx = Math.min(startImg.x, endImg.x);
+      let ny = Math.min(startImg.y, endImg.y);
+      let nw = Math.abs(endImg.x - startImg.x);
+      let nh = Math.abs(endImg.y - startImg.y);
+      if (cropRatio) {
+        nh = nw / cropRatio;
+      }
+      nx = clamp(nx, 0, imgW - nw);
+      ny = clamp(ny, 0, imgH - nh);
+      crop.x = nx; crop.y = ny; crop.w = nw; crop.h = nh;
+    } else {
+      // Resize handles
+      let { x, y, w, h } = sc;
+      if (dragMode.includes('e')) { w = sc.w + imgDX; }
+      if (dragMode.includes('w')) { x = sc.x + imgDX; w = sc.w - imgDX; }
+      if (dragMode.includes('s')) { h = sc.h + imgDY; }
+      if (dragMode.includes('n')) { y = sc.y + imgDY; h = sc.h - imgDY; }
+
+      // Enforce aspect ratio
+      if (cropRatio) {
+        if (dragMode === 'n' || dragMode === 's') {
+          w = h * cropRatio;
+          if (dragMode === 'n') { x = sc.x + (sc.w - w) / 2; }
+        } else if (dragMode === 'e' || dragMode === 'w') {
+          h = w / cropRatio;
+          if (dragMode === 'w') { y = sc.y + (sc.h - h) / 2; }
+        } else {
+          // Corner: maintain ratio
+          w = h * cropRatio;
+          if (dragMode === 'nw' || dragMode === 'sw') { x = sc.x + sc.w - w; }
+        }
+      }
+
+      // Min size
+      if (w < 10 / zoom) { w = 10 / zoom; if (dragMode.includes('w')) x = sc.x + sc.w - w; }
+      if (h < 10 / zoom) { h = 10 / zoom; if (dragMode.includes('n')) y = sc.y + sc.h - h; }
+
+      // Clamp to image bounds
+      if (x < 0) { w += x; x = 0; }
+      if (y < 0) { h += y; y = 0; }
+      if (x + w > imgW) { w = imgW - x; }
+      if (y + h > imgH) { h = imgH - y; }
+      if (w < 1) w = 1;
+      if (h < 1) h = 1;
+
+      crop.x = x; crop.y = y; crop.w = w; crop.h = h;
+    }
+
+    updateOutputSizeFromCrop();
+    render();
+  }
+
+  function onPointerUp() {
+    dragMode = null;
+    document.removeEventListener('mousemove', onPointerMove);
+    document.removeEventListener('mouseup', onPointerUp);
+    document.removeEventListener('touchmove', onPointerMove);
+    document.removeEventListener('touchend', onPointerUp);
+  }
+
+  // --- Hover cursor ---
+  cropInteraction.addEventListener('mousemove', function(e) {
+    if (dragMode) return;
+    const p = getPointerPos(e);
+    const mode = getCursorMode(p.x, p.y);
+    cropInteraction.style.cursor = getCursorForMode(mode);
+  });
+
+  // --- Zoom Slider ---
+  zoomSlider.addEventListener('input', function() {
+    if (!originalImage) return;
+    const { w, h } = getContainerSize();
+    const oldZoom = zoom;
+    zoom = parseFloat(this.value);
+
+    // Zoom toward center of container
+    const cx = w / 2;
+    const cy = h / 2;
+    panX = cx - (cx - panX) * (zoom / oldZoom);
+    panY = cy - (cy - panY) * (zoom / oldZoom);
+
+    render();
+  });
+
+  // --- Pan with mouse wheel ---
+  previewContainer.addEventListener('wheel', function(e) {
+    if (!originalImage) return;
+    e.preventDefault();
+    const { w, h } = getContainerSize();
+    const oldZoom = zoom;
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    zoom = clamp(zoom * delta, 0.1, 10);
+    zoomSlider.value = zoom;
+
+    // Zoom toward mouse position
+    const rect = previewContainer.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    panX = mx - (mx - panX) * (zoom / oldZoom);
+    panY = my - (my - panY) * (zoom / oldZoom);
+
+    render();
+  }, { passive: false });
+
+  // --- Pan with middle click / alt+drag ---
+  let panDrag = false, panDragStart = { x: 0, y: 0 };
+  previewContainer.addEventListener('mousedown', function(e) {
+    if (e.button === 1 || (e.button === 0 && e.altKey)) {
+      e.preventDefault();
+      panDrag = true;
+      panDragStart = { x: e.clientX - panX, y: e.clientY - panY };
+      previewContainer.style.cursor = 'grab';
+    }
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!panDrag) return;
+    panX = e.clientX - panDragStart.x;
+    panY = e.clientY - panDragStart.y;
+    render();
+  });
+  document.addEventListener('mouseup', function() {
+    if (panDrag) {
+      panDrag = false;
+      previewContainer.style.cursor = '';
+    }
+  });
+
+  // --- Output Size ---
+  function updateOutputSizeFromCrop() {
+    const w = Math.round(crop.w);
+    const h = Math.round(crop.h);
+    outputWidthEl.value = w;
+    outputHeightEl.value = h;
+    updateFileSizeEstimate();
+  }
+
+  outputWidthEl.addEventListener('input', function() {
+    if (!originalImage) return;
+    const newW = parseInt(this.value) || 1;
+    const newH = Math.round(newW / (crop.w / crop.h));
+    cropRatio = crop.w / crop.h;
+    outputHeightEl.value = newH;
+    updateFileSizeEstimate();
+  });
+
+  outputHeightEl.addEventListener('input', function() {
+    if (!originalImage) return;
+    const newH = parseInt(this.value) || 1;
+    const newW = Math.round(newH * (crop.w / crop.h));
+    cropRatio = crop.w / crop.h;
+    outputWidthEl.value = newW;
+    updateFileSizeEstimate();
+  });
+
+  // --- Quality Slider & File Size Estimate ---
+  qualitySlider.addEventListener('input', function() {
+    updateFileSizeEstimate();
+  });
+
+  function updateFileSizeEstimate() {
+    if (!originalImage) {
+      fileSizeDisplay.textContent = '0 KB';
+      return;
+    }
+    const outW = parseInt(outputWidthEl.value) || Math.round(crop.w);
+    const outH = parseInt(outputHeightEl.value) || Math.round(crop.h);
+    const quality = parseFloat(qualitySlider.value);
+
+    // Create temp canvas to estimate
+    const tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = outW;
+    tmpCanvas.height = outH;
+    const tmpCtx = tmpCanvas.getContext('2d');
+
+    // Draw cropped & resized image
+    tmpCtx.drawImage(originalImage,
+      crop.x, crop.y, crop.w, crop.h,
+      0, 0, outW, outH);
+
+    tmpCanvas.toBlob(function(blob) {
+      if (!blob) return;
+      const kb = (blob.size / 1024).toFixed(1);
+      fileSizeDisplay.textContent = kb + ' KB';
+    }, 'image/jpeg', quality);
+  }
+
+  // --- Download ---
+  downloadBtn.addEventListener('click', function() {
+    if (!originalImage) return;
+    const outW = parseInt(outputWidthEl.value) || Math.round(crop.w);
+    const outH = parseInt(outputHeightEl.value) || Math.round(crop.h);
+    const quality = parseFloat(qualitySlider.value);
+
+    const tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = outW;
+    tmpCanvas.height = outH;
+    const tmpCtx = tmpCanvas.getContext('2d');
+
+    tmpCtx.drawImage(originalImage,
+      crop.x, crop.y, crop.w, crop.h,
+      0, 0, outW, outH);
+
+    tmpCanvas.toBlob(function(blob) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'trimmed_' + outW + 'x' + outH + '.jpg';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 'image/jpeg', quality);
+  });
+
+  // --- Resize handler ---
+  window.addEventListener('resize', function() {
+    if (!originalImage) return;
+    const { w, h } = getContainerSize();
+    panX += (w - mainCanvas.width) / 2;
+    panY += (h - mainCanvas.height) / 2;
+    render();
+  });
+
+})();
+</script>
+</body>
+</html>
