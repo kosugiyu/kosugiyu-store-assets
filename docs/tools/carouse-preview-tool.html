@@ -10,6 +10,62 @@ body {
         background-image: none;
         background-color: #FFFFFF;
      }
+/* === カルーセルプレビューツール ヘッダー === */
+.PreviewTool__header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  background: #1a1a2e;
+  color: #fff;
+  font-family: "Zen Kaku Gothic Antique", sans-serif;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.PreviewTool__header label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background: #16213e;
+  transition: background 0.2s;
+}
+.PreviewTool__header label:hover {
+  background: #0f3460;
+}
+.PreviewTool__header input[type="file"] {
+  display: none;
+}
+.PreviewTool__header .PreviewTool__badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.PreviewTool__header .PreviewTool__badge--pc {
+  background: #e94560;
+  color: #fff;
+}
+.PreviewTool__header .PreviewTool__badge--sp {
+  background: #0f3460;
+  color: #fff;
+  border: 1px solid #e94560;
+}
+.PreviewTool__header .PreviewTool__label {
+  font-size: 12px;
+  color: #ccc;
+}
+.PreviewTool__body {
+  padding-top: 48px;
+}
 </style>
 <script src='/js/jquery-1.8.2.min.js'></script><script type="text/javascript">
 	var _gaq = _gaq || [];
@@ -93,6 +149,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <script>window.__BASE_JQUERY__ = jQuery.noConflict(true)</script>
 
 </head><body>
+<!-- === カルーセルプレビューツール ヘッダー === -->
+<div class="PreviewTool__header">
+  <label>
+    <span class="PreviewTool__badge PreviewTool__badge--pc">PC</span>
+    <span class="PreviewTool__label">画像を選択</span>
+    <input type="file" id="PreviewTool__filePc" accept="image/*">
+  </label>
+  <label>
+    <span class="PreviewTool__badge PreviewTool__badge--sp">SP</span>
+    <span class="PreviewTool__label">画像を選択</span>
+    <input type="file" id="PreviewTool__fileSp" accept="image/*">
+  </label>
+</div>
 <img id="tracimg" style="display: none;">
 
 <script type="text/javascript">
@@ -143,4 +212,76 @@ document.addEventListener('click',e=>{
 
 <input id="x_phrases" type="hidden" data-lang="ja" value="{&quot;apps&quot;:{&quot;message&quot;:{&quot;send&quot;:&quot;\u9001\u4fe1&quot;,&quot;placeholder&quot;:&quot;\u30e1\u30c3\u30bb\u30fc\u30b8\u3092\u5165\u529b\u3059\u308b&quot;,&quot;disabled&quot;:&quot;\u73fe\u5728\u30e1\u30c3\u30bb\u30fc\u30b8\u3092\u9001\u308b\u3053\u3068\u306f\u3067\u304d\u307e\u305b\u3093\u3002&quot;,&quot;maximum_length&quot;:&quot;\u4e00\u5ea6\u306b\u9001\u308c\u308b\u30e1\u30c3\u30bb\u30fc\u30b8\u306f\u6700\u5927500\u6587\u5b57\u3067\u3059\u3002&quot;,&quot;sending&quot;:&quot;\u9001\u4fe1\u4e2d...&quot;,&quot;failed&quot;:{&quot;text&quot;:&quot;\u30e1\u30c3\u30bb\u30fc\u30b8\u304c\u9001\u4fe1\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002&quot;,&quot;image&quot;:&quot;\u753b\u50cf\u304c\u9001\u4fe1\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002&quot;,&quot;text_and_image&quot;:&quot;\u30e1\u30c3\u30bb\u30fc\u30b8\u3068\u753b\u50cf\u304c\u9001\u4fe1\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002&quot;},&quot;resend&quot;:&quot;\u518d\u9001\u4fe1\u3059\u308b&quot;,&quot;fatal_error&quot;:&quot;\u554f\u984c\u304c\u767a\u751f\u3057\u307e\u3057\u305f \u30da\u30fc\u30b8\u3092\u66f4\u65b0\u3057\u3066\u304f\u3060\u3055\u3044&quot;,&quot;system_error&quot;:&quot;\u30b7\u30b9\u30c6\u30e0\u3067\u554f\u984c\u304c\u767a\u751f\u3057\u307e\u3057\u305f\u3002\u6642\u9593\u3092\u304a\u3044\u3066\u518d\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002&quot;,&quot;receive_notifications_title&quot;:&quot;\u901a\u77e5\u3092\u53d7\u3051\u53d6\u308b&quot;,&quot;receive_notifications_body&quot;:&quot;\u30b7\u30e7\u30c3\u30d7\u304b\u3089\u8fd4\u4fe1\u304c\u3042\u3063\u305f\u5834\u5408\u306b\u901a\u77e5\u3092\u53d7\u3051\u53d6\u308b\u3053\u3068\u304c\u3067\u304d\u307e\u3059\u3002\u3059\u3067\u306b\u8cfc\u5165\u6e08\u307f\u306e\u5834\u5408\u306f\u3001\u8cfc\u5165\u6642\u306b\u3054\u767b\u9332\u3057\u305f\u9023\u7d61\u5148\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002&quot;,&quot;receive_notifications_mail&quot;:&quot;\u30e1\u30fc\u30eb&quot;,&quot;receive_notifications_sms&quot;:&quot;SMS&quot;,&quot;receive_notifications_done&quot;:&quot;\u5b8c\u4e86&quot;,&quot;complete_notifications_setting_title&quot;:&quot;\u901a\u77e5\u8a2d\u5b9a\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f&quot;,&quot;complete_notifications_setting_body&quot;:&quot;\u30b7\u30e7\u30c3\u30d7\u304b\u3089\u8fd4\u4fe1\u304c\u5c4a\u3044\u305f\u3089\u4e0a\u8a18\u306e\u9023\u7d61\u5148\u306b\u304a\u77e5\u3089\u305b\u3057\u307e\u3059\u3002&quot;,&quot;today&quot;:&quot;\u4eca\u65e5&quot;,&quot;img_delete_dialog&quot;:&quot;\u753b\u50cf\u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f&quot;,&quot;img_delete_success&quot;:&quot;\u753b\u50cf\u3092\u524a\u9664\u3057\u307e\u3057\u305f&quot;,&quot;img_deleted_text&quot;:&quot;\u753b\u50cf\u3092\u524a\u9664\u3057\u307e\u3057\u305f&quot;,&quot;img_upload&quot;:{&quot;failed&quot;:&quot;\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002&quot;,&quot;size_limit&quot;:&quot;\u767b\u9332\u53ef\u80fd\u306a\u30d5\u30a1\u30a4\u30eb\u306f10MB\u307e\u3067\u3067\u3059\u3002&quot;,&quot;type_limit&quot;:&quot;\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\u3067\u304d\u308b\u306e\u306f\u753b\u50cf\uff08jpg, png, gif\uff09\u3067\u3059\u3002&quot;,&quot;num_limit&quot;:&quot;\u767b\u9332\u53ef\u80fd\u306a\u30d5\u30a1\u30a4\u30eb\u306f1\u679a\u307e\u3067\u3067\u3059\u3002&quot;,&quot;system_error&quot;:&quot;\u30b7\u30b9\u30c6\u30e0\u3067\u554f\u984c\u304c\u767a\u751f\u3057\u307e\u3057\u305f\u3002\u6642\u9593\u3092\u304a\u3044\u3066\u518d\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002&quot;},&quot;action_delete&quot;:&quot;\u524a\u9664\u3059\u308b&quot;,&quot;action_cancel&quot;:&quot;\u3084\u3081\u308b&quot;,&quot;period&quot;:&quot;\u3002&quot;}}}"></input><script type="text/javascript" src="https://cf-baseassets.thebase.in/db45af2a310a590b98086d5841a27b3c/asset/shop/BASEshop-a9dc129a640970b87cb2.js"></script>
 
-</body><script>window.globalSettings = window.globalSettings ?? {}; window.globalSettings = { ...window.globalSettings, ajaxParameters: { pageLoadEndPoint: 'https://store.kosugiyu.co.jp/load_items/', pageLoadParameters: '/my_theme_78819/0', initialIndex: 2, maxIndex: 2 }};</script></html> 
+</body>
+<script>
+// === カルーセルプレビューツール 画像上書きロジック ===
+(function() {
+  'use strict';
+
+  const pcInput = document.getElementById('PreviewTool__filePc');
+  const spInput = document.getElementById('PreviewTool__fileSp');
+
+  // すべてのカルーセル画像を上書き
+  function updateCarouselImages(type, objectUrl) {
+    const items = document.querySelectorAll('.Carousel__imageWrap');
+    if (!items.length) return;
+
+    items.forEach(function(wrap) {
+      const picture = wrap.querySelector('picture');
+      if (!picture) return;
+      if (type === 'pc') {
+        const img = picture.querySelector('img.Carousel__image');
+        if (img) img.src = objectUrl;
+      } else if (type === 'sp') {
+        const source = picture.querySelector('source');
+        if (source) source.srcset = objectUrl;
+      }
+    });
+  }
+
+  // ファイル選択時の処理
+  pcInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    updateCarouselImages('pc', url);
+  });
+
+  spInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    updateCarouselImages('sp', url);
+  });
+
+  // カルーセルが動的に生成されるので、MutationObserverでスライド追加を監視
+  var observer = new MutationObserver(function() {
+    // スライドが追加されたら、すでに選択済みの画像があれば適用し直す
+    if (pcInput.files[0]) {
+      updateCarouselImages('pc', URL.createObjectURL(pcInput.files[0]));
+    }
+    if (spInput.files[0]) {
+      updateCarouselImages('sp', URL.createObjectURL(spInput.files[0]));
+    }
+  });
+
+  // 監視を開始（カルーセルwrapperの追加を待つ）
+  function startObserver() {
+    var wrapper = document.querySelector('.swiper-wrapper');
+    if (wrapper) {
+      observer.observe(wrapper, { childList: true, subtree: true });
+    } else {
+      // まだwrapperがない場合は再試行
+      setTimeout(startObserver, 500);
+    }
+  }
+
+  // ページ読み完了後に開始
+  if (document.readyState === 'complete') {
+    startObserver();
+  } else {
+    window.addEventListener('load', startObserver);
+  }
+})();
+</script>
+<script>window.globalSettings = window.globalSettings ?? {}; window.globalSettings = { ...window.globalSettings, ajaxParameters: { pageLoadEndPoint: 'https://store.kosugiyu.co.jp/load_items/', pageLoadParameters: '/my_theme_78819/0', initialIndex: 2, maxIndex: 2 }};</script></html>
