@@ -1,0 +1,77 @@
+[
+  {
+    "title": "テストデータその1です",
+    "thumbnail": {
+      "normal": {
+        "width": 2000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/kosugiyu_set_normal.jpg"
+      },
+      "small": {
+        "width": 1000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/kosugiyu_set_small.jpg"
+      }
+    },
+    "text": "テストデータその1の説明文あいうえお\nテストデータその1の説明文あいうえお",
+    "url": "https://store.kosugiyu.co.jp/categories/7116454"
+  },
+  {
+    "title": "テストデータその2です",
+    "thumbnail": {
+      "normal": {
+        "width": 2000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260430/taiki_kishimoto_normal.jpg"
+      },
+      "small": {
+        "width": 1000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260430/taiki_kishimoto_small.jpg"
+      }
+    },
+    "text": "テストデータその2の説明文あいうえお\nテストデータその2の説明文あいうえお",
+    "url": "https://store.kosugiyu.co.jp/categories/7116456"
+  },
+  {
+    "title": "テストデータその3です",
+    "thumbnail": {
+      "normal": {
+        "width": 1502,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260610/milk_ipppou_normal.jpg"
+      },
+      "small": {
+        "width": 1502,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260610/milk_ipppou_small.jpg"
+      }
+    },
+    "text": "テストデータその3の説明文あいうえお\nテストデータその2の説明文あいうえお",
+    "url": "https://store.kosugiyu.co.jp/items/139733455"
+  },
+  {
+    "title": "今日はお浸かれ。\n心と体をゆるめる時間。",
+    "thumbnail": {
+      "normal": {
+        "width": 2000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/furomoto_normal.jpg"
+      },
+      "small": {
+        "width": 1000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/furomoto_small.jpg"
+      }
+    },
+    "text": "ちょっと特別な、おふろ時間を贈る\n天然素材の「おふろのもと」",
+    "url": "https://store.kosugiyu.co.jp/items/136422121"
+  },
+  {
+    "title": "おふろ花札、できました。",
+    "thumbnail": {
+      "normal": {
+        "width": 2000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/hanafuda_normal.jpg"
+      },
+      "small": {
+        "width": 1000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/hanafuda_small.jpg"
+      }
+    },
+    "text": "銭湯ならではのあたたかな世界観を\nぎゅっと詰め込みました",
+    "url": "https://store.kosugiyu.co.jp/items/145759602"
+  }
+]
