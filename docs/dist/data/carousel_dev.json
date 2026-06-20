@@ -1,35 +1,5 @@
 [
   {
-    "title": "テストデータその1です",
-    "thumbnail": {
-      "normal": {
-        "width": 2000,
-        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/kosugiyu_set_normal.jpg"
-      },
-      "small": {
-        "width": 1000,
-        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/kosugiyu_set_small.jpg"
-      }
-    },
-    "text": "テストデータその1の説明文あいうえお\nテストデータその1の説明文あいうえお",
-    "url": "https://store.kosugiyu.co.jp/categories/7116454"
-  },
-  {
-    "title": "テストデータその2です",
-    "thumbnail": {
-      "normal": {
-        "width": 2000,
-        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260430/taiki_kishimoto_normal.jpg"
-      },
-      "small": {
-        "width": 1000,
-        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260430/taiki_kishimoto_small.jpg"
-      }
-    },
-    "text": "テストデータその2の説明文あいうえお\nテストデータその2の説明文あいうえお",
-    "url": "https://store.kosugiyu.co.jp/categories/7116456"
-  },
-  {
     "title": "『今日はお浸かれ』\nギフトで気持ちを伝えよう",
     "thumbnail": {
       "normal": {
@@ -58,6 +28,36 @@
     },
     "text": "大好評につき新色&新柄が発売！\n夏の湯上がりのお供にいかが？",
     "url": "https://store.kosugiyu.co.jp/categories/7116456"
+  },
+  {
+    "title": "明日に進むための\nミルク風呂",
+    "thumbnail": {
+      "normal": {
+        "width": 1502,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260610/milk_ipppou_normal.jpg"
+      },
+      "small": {
+        "width": 1502,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260610/milk_ipppou_small.jpg"
+      }
+    },
+    "text": "昭和8年創業の銭湯小杉湯で\n初代から引き継がれる伝統の入浴剤",
+    "url": "https://store.kosugiyu.co.jp/items/139733455"
+  },
+  {
+    "title": "今日はお浸かれ。\n心と体をゆるめる時間。",
+    "thumbnail": {
+      "normal": {
+        "width": 2000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/furomoto_normal.jpg"
+      },
+      "small": {
+        "width": 1000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/furomoto_small.jpg"
+      }
+    },
+    "text": "ちょっと特別な、おふろ時間を贈る\n天然素材の「おふろのもと」",
+    "url": "https://store.kosugiyu.co.jp/items/136422121"
   },
   {
     "title": "おふろ花札、できました。",
