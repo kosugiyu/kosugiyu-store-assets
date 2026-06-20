@@ -30,34 +30,34 @@
     "url": "https://store.kosugiyu.co.jp/categories/7116456"
   },
   {
-    "title": "テストデータその3です",
-    "thumbnail": {
-      "normal": {
-        "width": 1502,
-        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260610/milk_ipppou_normal.jpg"
-      },
-      "small": {
-        "width": 1502,
-        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260610/milk_ipppou_small.jpg"
-      }
-    },
-    "text": "テストデータその3の説明文あいうえお\nテストデータその2の説明文あいうえお",
-    "url": "https://store.kosugiyu.co.jp/items/139733455"
-  },
-  {
-    "title": "今日はお浸かれ。\n心と体をゆるめる時間。",
+    "title": "『今日はお浸かれ』\nギフトで気持ちを伝えよう",
     "thumbnail": {
       "normal": {
         "width": 2000,
-        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/furomoto_normal.jpg"
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260620/otsukare_gift_normal.jpg"
       },
       "small": {
         "width": 1000,
-        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260226/furomoto_small.jpg"
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260620/otsukare_gift_small.jpg"
       }
     },
-    "text": "ちょっと特別な、おふろ時間を贈る\n天然素材の「おふろのもと」",
-    "url": "https://store.kosugiyu.co.jp/items/136422121"
+    "text": "小杉湯が心を込めて選んだ入浴剤\n心も身体もポカポカにしてくれます",
+    "url": "https://store.kosugiyu.co.jp/categories/7116454"
+  },
+  {
+    "title": "小杉湯×アーティスト\n新色&新柄が登場！",
+    "thumbnail": {
+      "normal": {
+        "width": 2000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260620/taikikishimoto_newcolor_normal.jpg"
+      },
+      "small": {
+        "width": 1000,
+        "url": "https://kosugiyu.github.io/kosugiyu-store-assets/dist/images/photos/pickup/20260620/taikikishimoto_newcolor_small.jpg"
+      }
+    },
+    "text": "大好評につき新色&新柄が発売！\n夏の湯上がりのお供にいかが？",
+    "url": "https://store.kosugiyu.co.jp/categories/7116456"
   },
   {
     "title": "おふろ花札、できました。",
